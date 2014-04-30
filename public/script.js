@@ -2,20 +2,36 @@ $(document).ready(function() {
 
   $.getJSON('/new_board', function(data) {
     setBoardHTML(data);
+    board = data;
   });
 
 
   $('#code_form').submit(function(event) {
     event.preventDefault();
-    $.getJSON('/new_board', function(data) {
-      var board = data;
-      var input = $('#code').val();
-      board.code = formatCode(input);
-      $.post('/send', JSON.stringify(board), function(data) {
-        $('table tr').remove();
-        setCodeHTML(data);
-        setRowsHTML(data);
-      });
+    var input = $('#code').val();
+    board.code = formatCode(input);
+    $.post('/send', JSON.stringify(board), function(data) {
+      board = data;
+      $('table tr').remove();
+      setCodeHTML(data);
+      setRowsHTML(data);
+    });
+  });
+
+
+  row_index = 0
+
+
+  $('#feedback_form').submit(function(event) {
+    event.preventDefault();
+    var input = $('#feedback').val();
+    board.rows[row_index].key_peg_holes = formatCode(input);
+    $.post('/send', JSON.stringify(board), function(data) {
+      board = data;
+      row_index += 1;
+      $('table tr').remove();
+      setCodeHTML(data);
+      setRowsHTML(data);
     });
   });
 
