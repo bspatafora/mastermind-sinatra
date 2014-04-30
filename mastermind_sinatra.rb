@@ -7,12 +7,17 @@ get '/' do
   haml :index
 end
 
-post '/' do
-  haml :index
+get '/new_board' do
+  content_type :json
+  new_board = Mastermind::Board.new
+  JSON.generate(Mastermind::JSONInterface.generate_structure_from(new_board))
 end
 
-get '/api' do
+post '/send' do
   content_type :json
-  JSON.generate({ code: [], rows: [{ code_peg_holes: [], key_peg_holes: [] }, { code_peg_holes: [], key_peg_holes: [] }, { code_peg_holes: [], key_peg_holes: [] }, { code_peg_holes: [], key_peg_holes: [] }, { code_peg_holes: [], key_peg_holes: [] }, { code_peg_holes: [], key_peg_holes: [] }, { code_peg_holes: [], key_peg_holes: [] }, { code_peg_holes: [], key_peg_holes: [] }, { code_peg_holes: [], key_peg_holes: [] }, { code_peg_holes: [], key_peg_holes: [] }] })
-  # JSON.generate(Mastermind::JSONInterface.new_board)
+  board_structure = JSON.parse(request.body.read, :symbolize_names=>true)
+  board = Mastermind::JSONInterface.generate_board_from(board_structure)
+  computer = Mastermind::Computer.new(board)
+  Mastermind::JSONInterface.send_guess(board, computer.solicit_guess)
+  JSON.generate(Mastermind::JSONInterface.generate_structure_from(board))
 end
