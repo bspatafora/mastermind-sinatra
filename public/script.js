@@ -12,7 +12,7 @@ $(document).ready(function() {
     board.code = formatCode(input);
     $.post('/send', JSON.stringify(board), function(data) {
       board = data;
-      $('table tr').remove();
+      $('#board tr').remove();
       setCodeHTML(data);
       setRowsHTML(data);
     });
@@ -29,7 +29,7 @@ $(document).ready(function() {
     $.post('/send', JSON.stringify(board), function(data) {
       board = data;
       row_index += 1;
-      $('table tr').remove();
+      $('#board tr').remove();
       setCodeHTML(data);
       setRowsHTML(data);
     });
@@ -44,9 +44,9 @@ $(document).ready(function() {
 
   function setCodeHTML(data) {
     if (!data.code) {
-      $('table').append('<tr><th>_ _ _ _</th></tr>');
+      $('#board').append('<tr><th>_ _ _ _</th></tr>');
     } else {
-      $('table').append('<tr><th>' + data.code.join(' ') + '</th></tr>');
+      $('#board').append('<tr><th>' + data.code.join(' ') + '</th></tr>');
     }
   }
 
@@ -54,9 +54,9 @@ $(document).ready(function() {
   function setRowsHTML(data) {
     $.each(data.rows, function(index, row) {
       if (!row.code_peg_holes[0]) {
-        $('table').append('<tr><td>_ _ _ _</td><td>' + row.key_peg_holes.join(' ') + '</td></tr>');
+        $('#board').append('<tr><td>_ _ _ _</td><td>' + row.key_peg_holes.join(' ') + '</td></tr>');
       } else {
-        $('table').append('<tr><td>' + row.code_peg_holes.join(' ') + '</td><td>' + row.key_peg_holes.join(' ') + '</td></tr>');
+        $('#board').append('<tr><td>' + row.code_peg_holes.join(' ') + '</td><td>' + row.key_peg_holes.join(' ') + '</td></tr>');
       }
     });
   }
